@@ -1,0 +1,7 @@
+.vscode
+.idea
+.coverage*
+staticfiles
+mediafiles
+client/node_modules
+# .DS_Store only for macOS
