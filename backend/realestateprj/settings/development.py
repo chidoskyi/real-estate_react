@@ -1,21 +1,15 @@
-from .base import os
+from .base import *
 import environ
 import psycopg2 # type: ignore
 
-# Initialize environment variables
 env = environ.Env()
 
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+# Read the .env file
+environ.Env.read_env()
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get('DB_ENGINE'),
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
@@ -25,6 +19,8 @@ DATABASES = {
 }
 
 # Connect to the PostgreSQL database
+connection = None
+cursor = None
 try:
     connection = psycopg2.connect(
         dbname=os.environ.get('DB_NAME'),
@@ -49,3 +45,6 @@ finally:
         cursor.close()
         connection.close()
         print("Database connection closed")
+
+DEBUG = env.bool('DEBUG', default=True)
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', '[::1]'])
